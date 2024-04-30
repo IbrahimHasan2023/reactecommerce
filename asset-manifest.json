@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/reactecommerce/static/css/main.5539e141.css",
+    "main.js": "/reactecommerce/static/js/main.8a1c0c3c.js",
+    "static/media/shampoo.png": "/reactecommerce/static/media/shampoo.b2b1dfb82ca250df7b4d.png",
+    "static/media/image store.png": "/reactecommerce/static/media/image store.803defad2451fe1df698.png",
+    "static/media/profile.png": "/reactecommerce/static/media/profile.d376dfb08d4e4261cc64.png",
+    "static/media/cart.png": "/reactecommerce/static/media/cart.f5b6b62b62ad9ac5d2a4.png",
+    "static/media/Orange Simple Online Shopping Logo (2).png": "/reactecommerce/static/media/Orange Simple Online Shopping Logo (2).1d0547cc51a7b0c43734.png",
+    "index.html": "/reactecommerce/index.html",
+    "main.5539e141.css.map": "/reactecommerce/static/css/main.5539e141.css.map",
+    "main.8a1c0c3c.js.map": "/reactecommerce/static/js/main.8a1c0c3c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5539e141.css",
+    "static/js/main.8a1c0c3c.js"
+  ]
+}
