@@ -1,24 +1,21 @@
-// import { useHistory } from "react-router-dom";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../../Css/Component/button.css";
+import { auth } from "../../Firebase";
 
 export default function Logout() {
-  // const history = useHistory();
-
-//   function handleLogout() {
-//     const userId = localStorage.getItem("userId"); // Assuming userId is stored in local storage
-
-//     if (userId) {
-//       // Clear user session for the specific user
-//       localStorage.removeItem(`user\_$\{userId\}\_token`);
-//       // Redirect to the login page
-//       history.push("/login");
-//     } else {
-//       console.log("User ID not found");
-//     }
-//    }
-
+  function handlelogout() {
+    auth.signOut().then((val) => {
+      console.log(val, "val");
+      window.location.pathname = "/login";
+    });
+  }
   return (
-    <div >
-      Log Out
+    <div>
+      <button onClick={handlelogout} type="submite" className="submit-l">
+        Logout
+        <FontAwesomeIcon icon={faRightFromBracket} />
+      </button>
     </div>
   );
 }

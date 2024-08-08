@@ -1,64 +1,42 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import LoadingSubmit from "../../Components/loading";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../Firebase";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function Register() {
-  const [users, setUsers] = useState(
-    JSON.parse(localStorage.getItem("users")) || []
-  );
-
-  const [form, setform] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-  const [emailError, setEmailError] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   //loading
   const [loading, setLoading] = useState(false);
+  // error
+  const [err, setErr] = useState("");
 
-  //ref
-  const focus = useRef("");
+  const nav = useNavigate();
 
-  function handleChange(e) {
-    setform({ ...form, [e.target.name]: e.target.value });
-  }
-
-  //handel with focus
-  useEffect(() => {
-    focus.current.focus();
-  }, []);
-
-  function handleRegister(e) {
+  // this is to register with firebase
+  const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const newUser = {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      };
-
-      // Check if the email is already registered
-      const isEmailExists = users.some((user) => user.email === newUser.email);
-      if (isEmailExists) {
-        setLoading(false);
-        setEmailError(
-          "Email is already registered. Please use a different email."
-        );
-      } else {
-        const updatedUsers = [...users, newUser];
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
-        setUsers(updatedUsers);
-        setEmailError(""); // Clear any previous email error message
-        window.location.pathname = "/dashboard";
-      }
+      await createUserWithEmailAndPassword(auth, email, password);
+      // .then(
+      //   (usercridential) => {
+      // const user = usercridential.user;
+      // if (user) {
+      nav("/dashboard");
+      // }
+      // }
+      // )
     } catch (error) {
-      setEmailError("An error occurred while registering the user");
+      setErr(error.message);
+      setLoading(false);
     }
-  }
-
-  //const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-  // Use storedUsers as needed (e.g., to display a list of registered users)
+  };
 
   return (
     <>
@@ -68,6 +46,7 @@ export default function Register() {
           <Form className="form" onSubmit={handleRegister}>
             <div className="C-form">
               <h1>Register</h1>
+              <br />
               <div>
                 <>
                   <Form.Group
@@ -75,52 +54,62 @@ export default function Register() {
                     controlId="exampleForm.ControlInput1"
                   >
                     <Form.Control
-                      ref={focus}
                       type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="name..."
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Name..."
                       required
                     />
                     <Form.Label>Name</Form.Label>
                   </Form.Group>
-
                   <Form.Group
                     className="form-custom"
                     controlId="exampleForm.ControlInput2"
                   >
                     <Form.Control
                       type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email..."
                       required
                     />
                     <Form.Label>Email</Form.Label>
                   </Form.Group>
-
                   <Form.Group
                     className="form-custom"
                     controlId="exampleForm.ControlInput3"
                   >
                     <Form.Control
                       type="password"
-                      name="password"
-                      value={form.password}
-                      onChange={handleChange}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="password..."
                       minLength={6}
                       required
                     />
                     <Form.Label>Password</Form.Label>
                   </Form.Group>
+                  <button type="submit" className="submit">
+                    REGISTER
+                  </button>
+                  {err && <div className="error">{err}</div>}
 
-                  <button className="submit">REGISTER </button>
-                  {emailError !== "" && (
-                    <span className="error">{emailError}</span>
-                  )}
+                  <p className="py-2">
+                    Alredy registered? <br />
+                    <Link
+                      to="/login"
+                      style={{
+                        fontSize: "25px",
+                        color: "blue",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "7px",
+                      }}
+                    >
+                      Login
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </Link>
+                  </p>
                 </>
               </div>
             </div>

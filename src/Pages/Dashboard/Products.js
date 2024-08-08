@@ -1,59 +1,71 @@
-import { useState } from "react";
-import { Form } from "react-bootstrap";
-import Table from "react-bootstrap/Table";
+import React, { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../Firebase";
+// import Cart from "./Cart";
+// import "./ProductList.css"; //
 
-export default function Products() {
-  const [product, setProduct] = useState([]);
+export default function ProductList() {
+  const [products, setProducts] = useState([]);
 
-  // const [search, setSearch] = useState("");
-  // const filterData = product.data.filter((item) =>
-  //   item.Title.toLowerCase().includes(search.toLowerCase())
-  // );
-  // //function to handle with search
-  // function handleSearch(e) {
-  //   setSearch(e.target.value);
-  // }
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "Products"), (snapshot) => {
+      const productList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(productList);
+    });
 
-  const ShowProducts = product.map((user, key) => (
-    <tr key={key}>
-      <td>{key + 1}</td>
-      <td>{user.Title}</td>
-      <td>{user.Img}</td>
-    </tr>
-  ));
+    return () => unsubscribe();
+  }, []);
+
+  const addToCart = (product) => {
+    const existingProducts = JSON.parse(localStorage.getItem("products")) || [];
+
+    // تحقق مما إذا كان المنتج موجودًا بالفعل في السلة
+    const existingProductIndex = existingProducts.findIndex(
+      (p) => p.id === product.id
+    );
+
+    if (existingProductIndex >= 0) {
+      // إذا كان موجودًا، قم بزيادة الكمية
+      existingProducts[existingProductIndex].quantity += 1;
+    } else {
+      // إذا لم يكن موجودًا، أضفه مع الكمية 1
+      product.quantity = 1;
+      existingProducts.push(product);
+    }
+
+    localStorage.setItem("products", JSON.stringify(existingProducts));
+  };
 
   return (
-    <div className=" w-100 m-3">
+    <div className="product-list w-100 m-3">
       <h2>Products</h2>
-
-      <Form.Control
-        style={{ width: "300px" }}
-        className="my-2"
-        type="serch"
-        placeholder="Search"
-        // onChange={handleSearch}
-      />
-
-      <Table striped bordered hover>
-        <thead >
-          <tr>
-            <th>id</th>
-            <th>Title</th>
-            <th> Img</th>
-          </tr>
-        </thead>
-        <tbody>
-          {product.length === 0 ? (
-            <tr>
-              <td colSpan={12} className="text-center">
-                There is no Products
-              </td>
-            </tr>
-          ) : (
-            ShowProducts
-          )}
-        </tbody>
-      </Table>
+      <hr />
+      <div className="row">
+        {products.map((product) => (
+          <div key={product.id} className="col-md-4">
+            <div className="card product-card">
+              <img
+                src={product.ProductImg}
+                alt={product.ProductName}
+                className="card-img-top"
+              />
+              <div className="card-body">
+                <h5 className="card-title">{product.ProductName}</h5>
+                <p className="card-text">{product.ProductPrice} $</p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => addToCart(product)}
+                >
+                  Add to cart
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

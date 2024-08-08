@@ -5,19 +5,19 @@
   border-radius: 5px;
   color: seashell;
   font-weight: bold;
-  background-color: #3f3fb7;
+  background-color: #0b5dd5;
   cursor: pointer;
   transition: 0.3s;
 }
 .submit:hover {
-  color: #3f3fb7;
+  color: #0b5dd5;
   background-color: seashell;
 }
 
 /* this style for button logout in addition with hover below */
 .submit-l {
   padding: 15px;
-  width: 110px;
+  width: 130px;
   border-radius: 5px;
   color: seashell;
   font-weight: bold;

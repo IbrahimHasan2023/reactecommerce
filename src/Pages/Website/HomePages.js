@@ -1,6 +1,8 @@
+import React from "react";
 import { Container } from "react-bootstrap";
 import Navbar from "../../Components/Website/NavBar/Navbar";
 import { Link } from "react-router-dom";
+
 export default function HomePages() {
   return (
     <div>
@@ -11,11 +13,11 @@ export default function HomePages() {
             <h1 className="display-3 fw-bold ">Nuts</h1>
             <h4 style={{ color: "black" }} className="fw-normal">
               Welcome to Our Shop Here you can choose a nuts that matches your
-              personal preferences . Happy Shopping!
+              personal preferences. Happy Shopping!
             </h4>
 
             <Link
-              to="/dashboard/products"
+              to="/dashboard"
               className="btn btn-primary mt-3 py-4 fw-bold text-light"
             >
               Shop now
@@ -25,35 +27,4 @@ export default function HomePages() {
       </div>
     </div>
   );
-}
-
-//import React from "react";
-// import { motion } from "framer-motion";
-
-// export default function HomePages() {
-//   const word = "Welcome";}
-
-{
-  /* <div className="App">
-        <h1>Home Pages</h1>
-
-        <motion.div
-          className="top-19px d-flex align-items-center justify-content-center"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }} // Customize animation duration
-          style={{ fontSize: "90px", fontWeight: "bold", color: "#7731D8" }} // Set font size
-        >
-          {word.split("").map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }} // Delay each character
-            >
-              {char}
-            </motion.span>
-          ))}
-        </motion.div>
-      </div> */
 }

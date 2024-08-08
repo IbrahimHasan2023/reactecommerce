@@ -1,60 +1,35 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import LoadingSubmit from "../../Components/loading";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../Firebase";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+// import { UserAuth } from "../../Context/RoutContext";
 
 export default function Login() {
-  const [users, setUsers] = useState(
-    JSON.parse(localStorage.getItem("users")) || []
-  );
-
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-  const [loginError, setLoginError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  //loading
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
 
-  //const ref
-  const focus = useRef("");
+  const nav = useNavigate();
 
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  //handel with useref for focus
-  useEffect(() => {
-    focus.current.focus();
-  }, []);
-
-  ///this is to update state of user
-  // const addUser = (newUser) => {
-  //   setUsers([...users, newUser]);
-  // };
-
-  function handleLogin(e) {
+  // this is to login with firebase
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { email, password } = form;
+      await signInWithEmailAndPassword(auth, email, password);
 
-      // Check if the email exists in the users array
-      const user = users.find((user) => user.email === email);
-
-      if (user && user.password === password) {
-        setLoading(true);
-        setLoginError("");
-        window.location.pathname = "/";
-        //and this below to handle with the function above
-        // addUser();
-      } else {
-        setLoading(false);
-        setLoginError("Invalid email or password. Please try again.");
-      }
+      nav("/dashboard");
     } catch (error) {
+      setErr(error.message);
       setLoading(false);
-      setLoginError("An error occurred while logging in");
     }
-  }
+  };
 
   return (
     <>
@@ -64,18 +39,17 @@ export default function Login() {
           <Form className="form" onSubmit={handleLogin}>
             <div className="C-form">
               <h1>Login</h1>
+              <br />
               <div>
                 <>
                   <Form.Group
                     className="form-custom"
-                    controlId="exampleForm.ControlInput1"
+                    controlId="exampleForm.ControlInput2"
                   >
                     <Form.Control
-                      ref={focus}
                       type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email..."
                       required
                     />
@@ -84,13 +58,12 @@ export default function Login() {
 
                   <Form.Group
                     className="form-custom"
-                    controlId="exampleForm.ControlInput2"
+                    controlId="exampleForm.ControlInput3"
                   >
                     <Form.Control
                       type="password"
-                      name="password"
-                      value={form.password}
-                      onChange={handleChange}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="password..."
                       minLength={6}
                       required
@@ -98,10 +71,27 @@ export default function Login() {
                     <Form.Label>Password</Form.Label>
                   </Form.Group>
 
-                  <button className="submit">Login</button>
-                  {loginError !== "" && (
-                    <span className="error">{loginError}</span>
-                  )}
+                  <button type="submit" className="submit">
+                    Login
+                  </button>
+                  {err && <div className="error">{err}</div>}
+
+                  <p className="py-5">
+                    Don't Have Account?
+                    <Link
+                      to="/register"
+                      style={{
+                        fontSize: "25px",
+                        color: "blue",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "7px",
+                      }}
+                    >
+                      Register
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </Link>
+                  </p>
                 </>
               </div>
             </div>
